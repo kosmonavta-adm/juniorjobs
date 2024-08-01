@@ -18,14 +18,17 @@ export default async function LoginPage() {
     const { data } = await supabase.auth.getUser();
 
     if (data?.user) {
-        redirect(url.dashboard);
+        redirect(url.welcome);
     }
 
     return (
         <main className="grid min-h-svh grid-cols-1 lg:grid-cols-2">
             <div className="relative hidden lg:flex">
                 <div className="z-10 flex h-full w-full bg-purple-800">
-                    <Logo className="absolute ml-8 mt-8" />
+                    <Logo
+                        variant="light"
+                        className="absolute ml-8 mt-8"
+                    />
                     <p className="m-auto text-6xl text-white">Nice to see you again!</p>
                 </div>
             </div>

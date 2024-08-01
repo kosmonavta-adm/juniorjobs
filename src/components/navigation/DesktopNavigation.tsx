@@ -7,7 +7,7 @@ const DesktopNavigation = () => {
     return (
         <nav className="flex justify-between bg-purple-800 px-16 py-8">
             <Logo variant="light" />
-            <menu>
+            <menu className="flex gap-12">
                 {menu.map((menuItem) => (
                     <li
                         key={menuItem.id}
