@@ -48,6 +48,7 @@ const PostPortfolio = () => {
         }, {});
         const parsedData = {
             full_name: data.fullName,
+            description: data.description,
             peek_count: 0,
             ...projectUrls,
         };

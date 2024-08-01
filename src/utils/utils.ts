@@ -5,7 +5,7 @@ export const url = {
     landing: '/',
     login: '/login',
     register: '/register',
-    dashboard: '/dashboard',
+    welcome: '/welcome',
     forgotPassword: '/auth/forgot-password',
     candidates: '/candidates',
 };

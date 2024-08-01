@@ -18,14 +18,17 @@ export default async function RegisterPage() {
     const { data } = await supabase.auth.getUser();
 
     if (data?.user) {
-        redirect(url.dashboard);
+        redirect(url.welcome);
     }
 
     return (
         <main className="grid min-h-svh grid-cols-1 lg:grid-cols-2">
             <div className="hidden lg:flex">
                 <div className="z-10 flex h-full w-full bg-purple-800">
-                    <Logo className="ml-8 mt-8" />
+                    <Logo
+                        variant="light"
+                        className="ml-8 mt-8"
+                    />
                 </div>
             </div>
             <div className="flex flex-col items-center p-4">

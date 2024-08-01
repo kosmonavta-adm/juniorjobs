@@ -4,4 +4,9 @@ export const menu = [
         url: '/your-portfolio',
         name: 'Your portfolio',
     },
+    {
+        id: 1,
+        url: '/juniors',
+        name: 'Juniors',
+    },
 ];
