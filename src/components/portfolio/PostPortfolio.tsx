@@ -51,7 +51,7 @@ const PostPortfolio = () => {
             peek_count: 0,
             ...projectUrls,
         };
-        supabase.from('portfolios').insert(parsedData);
+        await supabase.from('portfolios').insert(parsedData);
     };
 
     return (
