@@ -70,7 +70,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
                             )}
                         </button>
                     )}
-                    <p className="mt-1 text-xs text-neutral-600">{helperText}</p>
+                    {helperText && <p className="mt-1 text-xs text-neutral-600">{helperText}</p>}
                 </div>
                 {error && <ErrorText>{error}</ErrorText>}
             </div>
