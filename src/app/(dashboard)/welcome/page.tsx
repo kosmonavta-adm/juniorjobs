@@ -1,17 +1,19 @@
 import Link from 'next/link';
+import { redirect } from 'next/navigation';
 
 import PostPortfolio from '@/components/portfolio/PostPortfolio';
 import Button from '@/components/ui/Button';
+import { createClient } from '@/supabase/server';
 import { url } from '@/utils/utils';
 
 export default async function WelcomePage() {
-    // const supabase = createClient();
+    const supabase = createClient();
 
-    // const { data } = await supabase.auth.getUser();
+    const { data } = await supabase.auth.getUser();
 
-    // if (data?.user) {
-    //     redirect(url.dashboard);
-    // }
+    if (data?.user === null) {
+        redirect(url.login);
+    }
 
     return (
         <div className="grid h-[calc(100svh-96px)] min-h-0 grid-cols-1 lg:grid-cols-2">

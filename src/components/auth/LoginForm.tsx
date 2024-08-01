@@ -38,7 +38,7 @@ const LoginForm = () => {
     const handleLogin = async (formData: LoginData) => {
         const error = await loginUser(formData);
 
-        if (error === null) router.replace(url.dashboard);
+        if (error === null) router.replace(url.welcome);
         else toast({ description: 'Email or password are incorrect' });
     };
 
@@ -89,7 +89,7 @@ const LoginForm = () => {
             </div>
             <p>
                 <CustomLink
-                    className="text-purple-700 font-bold"
+                    className="font-bold text-purple-700"
                     href={url.register}
                 >
                     Sign Up
