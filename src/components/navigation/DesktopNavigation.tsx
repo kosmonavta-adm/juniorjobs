@@ -5,13 +5,13 @@ import Logo from '@/components/ui/Logo';
 
 const DesktopNavigation = () => {
     return (
-        <nav className="flex justify-between bg-purple-800 px-16 py-8">
-            <Logo variant="light" />
+        <nav className="flex justify-between bg-neutral-50 px-16 py-8">
+            <Logo variant="dark" />
             <menu className="flex gap-12">
                 {menu.map((menuItem) => (
                     <li
                         key={menuItem.id}
-                        className="text-lg font-bold text-white"
+                        className="text-lg font-medium"
                     >
                         <Link href={menuItem.url}>{menuItem.name}</Link>
                     </li>

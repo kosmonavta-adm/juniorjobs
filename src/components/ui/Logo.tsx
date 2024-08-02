@@ -10,9 +10,9 @@ type LogoProps = {
 
 const Logo = ({ className, variant }: LogoProps) => {
     return (
-        <div className={cxTw('flex h-fit items-center gap-2', className)}>
-            <Leaf className={cxTw('h-8 w-8', variant === 'light' ? 'stroke-white' : 'stroke-purple-800')} />
-            <p className={cxTw('text-2xl font-bold', variant === 'light' ? 'text-white' : 'text-purple-800')}>
+        <div className={cxTw('flex h-fit items-center gap-3', className)}>
+            <Leaf className={cxTw('h-7 w-7', variant === 'light' ? 'stroke-white' : 'stroke-black')} />
+            <p className={cxTw('text-2xl font-medium', variant === 'light' ? 'text-white' : 'text-black')}>
                 Junior Jobs
             </p>
         </div>
