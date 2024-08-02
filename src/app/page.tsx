@@ -60,7 +60,7 @@ export default async function LandingPage() {
             </div>
             <div className="flex bg-neutral-50 px-8 py-16 md:px-16 md:py-32 xl:grid-cols-2 2xl:px-32 2xl:py-64 4xl:px-64">
                 <Link
-                    className="mx-auto text-balance text-center text-9xl font-bold text-purple-600 underline decoration-wavy hover:text-purple-800"
+                    className="mx-auto text-balance text-center text-9xl font-bold leading-snug text-purple-600 underline decoration-wavy decoration-4 underline-offset-4 hover:text-purple-800"
                     href={url.register}
                 >
                     Give it a try!
