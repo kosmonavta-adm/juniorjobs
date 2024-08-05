@@ -9,68 +9,127 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      portfolios: {
+      juniors: {
         Row: {
+          about: string
           created_at: string
-          description: string
+          email: string | null
           full_name: string
           id: number
           is_verified: boolean
-          peek_count: number
           project_url_0: string
           project_url_1: string | null
           project_url_2: string | null
           project_url_3: string | null
           project_url_4: string | null
-          user_id: string | null
+          tag_0: string
+          tag_1: string | null
+          tag_2: string | null
+          tag_3: string | null
+          tag_4: string | null
+          tag_5: string | null
+          tag_6: string | null
+          tag_7: string | null
+          tag_8: string | null
+          tag_9: string | null
+          user_id: string
         }
         Insert: {
+          about: string
           created_at?: string
-          description: string
+          email?: string | null
           full_name: string
           id?: number
           is_verified?: boolean
-          peek_count?: number
           project_url_0: string
           project_url_1?: string | null
           project_url_2?: string | null
           project_url_3?: string | null
           project_url_4?: string | null
-          user_id?: string | null
+          tag_0: string
+          tag_1?: string | null
+          tag_2?: string | null
+          tag_3?: string | null
+          tag_4?: string | null
+          tag_5?: string | null
+          tag_6?: string | null
+          tag_7?: string | null
+          tag_8?: string | null
+          tag_9?: string | null
+          user_id?: string
         }
         Update: {
+          about?: string
           created_at?: string
-          description?: string
+          email?: string | null
           full_name?: string
           id?: number
           is_verified?: boolean
-          peek_count?: number
           project_url_0?: string
           project_url_1?: string | null
           project_url_2?: string | null
           project_url_3?: string | null
           project_url_4?: string | null
-          user_id?: string | null
+          tag_0?: string
+          tag_1?: string | null
+          tag_2?: string | null
+          tag_3?: string | null
+          tag_4?: string | null
+          tag_5?: string | null
+          tag_6?: string | null
+          tag_7?: string | null
+          tag_8?: string | null
+          tag_9?: string | null
+          user_id?: string
         }
         Relationships: []
       }
-      profiles: {
+      peeks: {
         Row: {
           created_at: string
           id: number
-          peeked: number[] | null
+          junior_id: number
           user_id: string
         }
         Insert: {
           created_at?: string
           id?: number
-          peeked?: number[] | null
+          junior_id: number
           user_id?: string
         }
         Update: {
           created_at?: string
           id?: number
-          peeked?: number[] | null
+          junior_id?: number
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "peeks_junior_id_fkey"
+            columns: ["junior_id"]
+            isOneToOne: false
+            referencedRelation: "juniors"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      profiles: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: number
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: number
+          user_id?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: number
           user_id?: string
         }
         Relationships: []

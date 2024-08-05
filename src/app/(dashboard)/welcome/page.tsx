@@ -1,40 +1,38 @@
-import Link from 'next/link';
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import { redirect } from 'next/navigation';
 
-import PostPortfolio from '@/components/portfolio/PostPortfolio';
-import Button from '@/components/ui/Button';
+import { getJuniors, getPeeks } from '@/components/juniors/juniors.queries';
+import JuniorsList from '@/components/juniors/JuniorsList';
+import PostPortfolio from '@/components/juniors/PostPortfolio';
+import TagsCloud from '@/components/juniors/TagsCloud';
 import { createClient } from '@/supabase/server';
 import { url } from '@/utils/utils';
 
 export default async function WelcomePage() {
     const supabase = createClient();
 
-    const { data } = await supabase.auth.getUser();
+    const session = await supabase.auth.getUser();
 
-    if (data?.user === null) {
+    if (session.data.user === null) {
         redirect(url.login);
     }
 
+    const queryClient = new QueryClient();
+
+    await Promise.all([queryClient.prefetchQuery(getJuniors(supabase)), queryClient.prefetchQuery(getPeeks(supabase))]);
+
     return (
-        <div className="grid h-[calc(100svh-96px)] min-h-0 grid-cols-1 lg:grid-cols-2">
-            <article className="flex flex-col gap-16 p-16">
-                <p className="mt-0 text-center text-5xl font-bold">
-                    Do you want to <span className="bg-purple-800 px-2 py-1 text-white">give</span> someone a job?
-                </p>
-                <Button
-                    className="mx-auto"
-                    size="lg"
-                    asChild
-                >
-                    <Link href={url.candidates}>Browse candidates</Link>
-                </Button>
-            </article>
-            <article className="flex flex-col gap-8 p-16">
-                <p className="text-center text-5xl font-bold">
-                    <span className="bg-purple-800 px-2 py-1 text-white">Looking</span> for a job? Post your portfolio!
-                </p>
-                <PostPortfolio />
-            </article>
-        </div>
+        <HydrationBoundary state={dehydrate(queryClient)}>
+            <div className="mx-auto flex min-h-svh max-w-screen-4xl flex-col gap-16 px-8 py-16 md:px-16 md:py-32 2xl:px-32">
+                <div className="flex justify-between">
+                    <PostPortfolio />
+                    <TagsCloud />
+                </div>
+                <div className="flex flex-col gap-8">
+                    <p className="text-4xl font-bold text-purple-500">Newest Juniors</p>
+                    <JuniorsList />
+                </div>
+            </div>
+        </HydrationBoundary>
     );
 }
