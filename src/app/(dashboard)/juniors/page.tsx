@@ -1,8 +1,9 @@
+import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import { redirect } from 'next/navigation';
 
+import { getJuniors } from '@/components/juniors/juniors.queries';
 import JuniorsList from '@/components/juniors/JuniorsList';
 import { createClient } from '@/supabase/server';
-import { Tables } from '@/utils/dbTypes';
 import { url } from '@/utils/utils';
 
 export default async function WelcomePage() {
@@ -14,11 +15,15 @@ export default async function WelcomePage() {
         redirect(url.login);
     }
 
-    const juniors = await supabase.from('portfolios').select('*');
+    const queryClient = new QueryClient();
+
+    await queryClient.prefetchQuery(getJuniors(supabase));
 
     return (
-        <div className="grid p-8">
-            <JuniorsList data={juniors.data as Tables<'portfolios'>[]} />
-        </div>
+        <HydrationBoundary state={dehydrate(queryClient)}>
+            <div className="grid p-8">
+                <JuniorsList />
+            </div>
+        </HydrationBoundary>
     );
 }

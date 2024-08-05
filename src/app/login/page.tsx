@@ -24,7 +24,7 @@ export default async function LoginPage() {
     return (
         <main className="grid min-h-svh grid-cols-1 lg:grid-cols-2">
             <div className="relative hidden lg:flex">
-                <div className="z-10 flex h-full w-full bg-purple-800">
+                <div className="z-10 flex h-full w-full bg-purple-500">
                     <Logo
                         variant="light"
                         className="absolute ml-8 mt-8"

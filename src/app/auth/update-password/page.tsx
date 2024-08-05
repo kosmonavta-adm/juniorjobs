@@ -17,7 +17,7 @@ export default async function PrivatePage() {
     return (
         <main className="grid min-h-svh grid-cols-1 lg:grid-cols-2">
             <div className="hidden lg:flex">
-                <div className="z-10 flex h-full w-full bg-purple-800">
+                <div className="z-10 flex h-full w-full bg-purple-500">
                     <Logo
                         variant="light"
                         className="ml-8 mt-8"

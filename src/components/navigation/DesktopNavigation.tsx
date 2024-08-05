@@ -5,7 +5,7 @@ import Logo from '@/components/ui/Logo';
 
 const DesktopNavigation = () => {
     return (
-        <nav className="flex justify-between bg-neutral-50 px-16 py-8">
+        <nav className="flex justify-between px-16 py-8">
             <Logo variant="dark" />
             <menu className="flex gap-12">
                 {menu.map((menuItem) => (

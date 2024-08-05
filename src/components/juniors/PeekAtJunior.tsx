@@ -1,39 +1,40 @@
 'use client';
 
-import { useEffect } from 'react';
+import { useState } from 'react';
 
-import { createClient } from '@/supabase/client';
+import { getEmailAction } from '@/components/juniors/_juniorsServerActions';
+import { useCreatePeek } from '@/components/juniors/juniors.mutations';
+import Button from '@/components/ui/Button';
 
 type PeekAtJuniorProps = {
-    id: number;
-    handleSetNewJuniors: () => void;
+    juniorId: number;
+    juniorEmail: string;
 };
 
-const PeekAtJunior = ({ id, handleSetNewJuniors }: PeekAtJuniorProps) => {
-    const supabase = createClient();
+const PeekAtPortfolio = ({ juniorId, juniorEmail }: PeekAtJuniorProps) => {
+    const createPeek = useCreatePeek();
+    const [isDisabled, setIsDisabled] = useState(false);
+    const [email, setEmail] = useState<undefined | string>(juniorEmail);
 
     const handlePeekAtJunior = async () => {
-        await supabase.rpc('increment', { row_id: id });
+        setIsDisabled(true);
+        await createPeek.mutateAsync(juniorId);
+
+        const data = await getEmailAction(juniorId);
+        setEmail(data?.email);
     };
 
-    useEffect(() => {
-        supabase
-            .channel('table-db-changes')
-            .on(
-                'postgres_changes',
-                {
-                    event: '*',
-                    schema: 'public',
-                    table: 'portfolios',
-                },
-                () => {
-                    handleSetNewJuniors();
-                }
-            )
-            .subscribe();
-    }, []);
-
-    return <button onClick={handlePeekAtJunior}>Peek</button>;
+    return email === undefined ? (
+        <Button
+            className="ml-auto"
+            disabled={isDisabled}
+            onClick={handlePeekAtJunior}
+        >
+            Get contact
+        </Button>
+    ) : (
+        <p className="ml-auto">{email}</p>
+    );
 };
 
-export default PeekAtJunior;
+export default PeekAtPortfolio;

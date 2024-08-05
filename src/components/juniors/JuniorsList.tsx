@@ -1,35 +1,93 @@
 'use client';
 
-import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
-import PeekAtJunior from '@/components/juniors/PeekAtJunior';
+import { getJuniors, getPeeks } from '@/components/juniors/juniors.queries';
+import PeekAtPortfolio from '@/components/juniors/PeekAtJunior';
+import Chip from '@/components/ui/Chip';
+import CustomLink from '@/components/ui/CustomLink';
 import { createClient } from '@/supabase/client';
-import { Tables } from '@/utils/dbTypes';
 
 type JuniorsListProps = {
-    data: Tables<'portfolios'>[];
+    limit?: number;
 };
 
-const JuniorsList = ({ data }: JuniorsListProps) => {
+const JuniorsList = ({ limit = Infinity }: JuniorsListProps) => {
     const supabase = createClient();
-    const [juniors, setJuniors] = useState<Tables<'portfolios'>[]>(data);
-    const handleSetNewJuniors = async () => {
-        const { data } = await supabase.from('portfolios').select('*');
-        setJuniors(data as Tables<'portfolios'>[]);
-    };
-    return juniors?.map((junior) => (
-        <div
-            className="border border-neutral-100 p-4"
-            key={junior.id}
-        >
-            <p>Fullname: {junior.full_name}</p>
-            <p>Peek count: {junior.peek_count}</p>
-            <PeekAtJunior
-                handleSetNewJuniors={handleSetNewJuniors}
-                id={junior.id}
-            />
+    const juniors = useQuery(getJuniors(supabase));
+    const peeks = useQuery(getPeeks(supabase));
+
+    const peeksLookup = peeks.data?.reduce((result, item) => {
+        if (item.junior === null) return result;
+        result.set(item.junior.id, item.junior.email);
+
+        return result;
+    }, new Map());
+
+    return (
+        <div className="grid grid-cols-2 gap-2">
+            {juniors.data?.slice(0, limit).map((junior) => {
+                const tags = [];
+                const projects = [];
+
+                for (let i = 0; i < 10; i++) {
+                    const tagKey = `tag_${i}` as keyof typeof junior;
+                    if (junior[tagKey] === null) continue;
+                    tags.push(junior[tagKey] as string);
+                }
+
+                for (let i = 0; i < 5; i++) {
+                    const projectKey = `projectUrl_${i}` as keyof typeof junior;
+                    if (junior[projectKey] === null) continue;
+                    projects.push(junior[projectKey] as string);
+                }
+
+                return (
+                    <div
+                        className="flex flex-col gap-2 border border-neutral-100 p-4"
+                        key={junior.id}
+                    >
+                        <p className="text-lg font-bold">{junior.fullName}</p>
+                        <p>{junior.about}</p>
+                        <div>
+                            <p className="font-bold">Projects</p>
+
+                            <ul>
+                                {projects.map((projectUrl) => (
+                                    <li key={projectUrl}>
+                                        <CustomLink
+                                            target="_blank"
+                                            href={projectUrl}
+                                        >
+                                            {projectUrl}
+                                        </CustomLink>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                        <div>
+                            <p className="font-bold">Skills</p>
+                            <div className="flex gap-2">
+                                {tags.map((tag) => (
+                                    <Chip
+                                        variant="light"
+                                        key={tag}
+                                        size="sm"
+                                        value={tag}
+                                    />
+                                ))}
+                            </div>
+                        </div>
+
+                        <PeekAtPortfolio
+                            juniorEmail={peeksLookup?.get(junior.id)}
+                            juniorId={junior.id}
+                        />
+                    </div>
+                );
+            })}
         </div>
-    ));
+    );
 };
 
 export default JuniorsList;

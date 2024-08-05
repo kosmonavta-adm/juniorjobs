@@ -23,10 +23,11 @@ const Button = forwardRef<HTMLButtonElement, ButtonProps>(
 
         const css = cxTw(
             `inline-flex cursor-pointer items-center justify-center gap-2 whitespace-nowrap font-medium
-        transition-colors w-fit focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:pointer-events-none`,
-            isPrimary && 'bg-black text-white hover:bg-neutral-900 disabled:bg-neutral-200',
+        transition-colors w-fit focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2`,
+            isPrimary &&
+                'bg-purple-500 text-white hover:bg-purple-600 disabled:bg-purple-100 disabled:cursor-not-allowed',
             isSecondary && 'bg-neutral-100 hover:bg-neutral-100 hover:text-neutral-600',
-            isGhost && 'hover:text-neutral-600',
+            isGhost && 'hover:text-neutral-600 disabled:cursor-now-allowed',
             isDestructive && 'bg-red-500 text-white hover:bg-red-600',
             isIcon &&
                 'flex h-10 aspect-square w-fit items-center transition-colors [&>svg]:h-5 [&>svg]:m-auto [&>svg]:absolute [&>svg]:inset-0 relative [&>svg]:stroke-neutral-600 [&>svg]:hover:stroke-neutral-800',

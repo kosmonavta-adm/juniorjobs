@@ -20,7 +20,7 @@ const Textarea = forwardRef<HTMLTextAreaElement, Textarea>(
         const isLabelGiven = label !== undefined;
 
         return (
-            <div className={cxTw('grid gap-2', className)}>
+            <div className="grid gap-2">
                 {isLabelGiven && (
                     <Label
                         className={cxTw(label.className)}
@@ -33,7 +33,10 @@ const Textarea = forwardRef<HTMLTextAreaElement, Textarea>(
                     ref={ref}
                     id={id}
                     rows={rows}
-                    className="'flex w-full border border-neutral-300 px-3 py-2 text-sm placeholder:text-neutral-400 focus-visible:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:bg-neutral-50 disabled:opacity-50"
+                    className={cxTw(
+                        'flex w-full border border-neutral-300 px-3 py-2 text-sm placeholder:text-neutral-400 focus-visible:outline-none focus-visible:ring-2 disabled:cursor-not-allowed disabled:bg-neutral-50 disabled:opacity-50',
+                        className
+                    )}
                     {...props}
                 />
                 {helperText && <p className="ml-auto">{helperText}</p>}

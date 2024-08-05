@@ -7,7 +7,7 @@ export const url = {
     register: '/register',
     welcome: '/welcome',
     forgotPassword: '/auth/forgot-password',
-    candidates: '/candidates',
+    juniors: '/juniors',
 };
 
 export const cxTw = (...classes: ClassValue[]) => twMerge(clsx(...classes));
