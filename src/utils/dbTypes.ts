@@ -118,21 +118,32 @@ export type Database = {
           created_at: string
           email: string | null
           id: number
+          portfolio_id: number | null
           user_id: string
         }
         Insert: {
           created_at?: string
           email?: string | null
           id?: number
+          portfolio_id?: number | null
           user_id?: string
         }
         Update: {
           created_at?: string
           email?: string | null
           id?: number
+          portfolio_id?: number | null
           user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "profiles_portfolio_id_fkey"
+            columns: ["portfolio_id"]
+            isOneToOne: false
+            referencedRelation: "juniors"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
