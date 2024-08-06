@@ -45,8 +45,9 @@ export default async function LandingPage() {
                     <h2 className="mb-8 w-fit text-5xl font-bold text-white">The Process</h2>
                     <p className="max-w-[40ch] text-2xl leading-relaxed text-white sm:text-3xl sm:leading-relaxed md:text-4xl md:leading-relaxed">
                         Remember all those times when a company didn&apos;t bother to give you feedback after an
-                        interview? Ghosting is, unfortunately, a common practice. We are changing the rules. Let others
-                        see your best projects and give you a job based on your skills, not luck.
+                        interview? Ghosting is, unfortunately, a common practice. We are changing the rules. Let your
+                        best projects speak for you. Let entrepreneurs to partner with you based on your skills and
+                        knowledge.
                     </p>
                 </div>
                 <UnThoughts className="mx-auto max-h-96 xl:h-96" />
