@@ -9,3 +9,7 @@ export const peeksKeys = {
 export const portfoliosKeys = {
     single: ['portfolio_single'],
 };
+
+export const tagsKeys = {
+    all: ['tags_all'],
+};

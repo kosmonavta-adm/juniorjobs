@@ -53,15 +53,19 @@ const TagsCloud = () => {
                     .slice(0, 50)
                     .sort(([_, tagACount], [__, tagBCount]) => tagBCount - tagACount)
                     .map(([tag, tagCount]) => (
-                        <Chip
-                            variant="light"
+                        <Link
                             key={tag}
-                            value={
-                                <>
-                                    {tag} ({tagCount})
-                                </>
-                            }
-                        />
+                            href={`${url.juniors}?t0=${tag}`}
+                        >
+                            <Chip
+                                variant="light"
+                                value={
+                                    <>
+                                        {tag} ({tagCount})
+                                    </>
+                                }
+                            />
+                        </Link>
                     ))}
             </div>
             <Button

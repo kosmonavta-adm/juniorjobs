@@ -1,6 +1,6 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 
-import { juniorsKeys, peeksKeys, portfoliosKeys } from '@/components/juniors/_juniorsUtils';
+import { juniorsKeys, peeksKeys, portfoliosKeys, tagsKeys } from '@/components/juniors/_juniorsUtils';
 import { Database } from '@/utils/dbTypes';
 
 export const getJuniors = (client: SupabaseClient<Database>) => ({
@@ -92,4 +92,21 @@ export const getPortfolio = (client: SupabaseClient<Database>, userId: string) =
         return data;
     },
     queryKey: portfoliosKeys.single,
+});
+
+export const getTags = (client: SupabaseClient<Database>) => ({
+    queryFn: async () => {
+        const { data, error } = await client.from('tags').select(
+            `
+                name
+                `
+        );
+
+        if (error) throw new Error(error.message);
+
+        const convertedTags = data.map(({ name }) => name);
+
+        return convertedTags;
+    },
+    queryKey: tagsKeys.all,
 });

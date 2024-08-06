@@ -1,152 +1,25 @@
 'use client';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useQuery } from '@tanstack/react-query';
 import { useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
 import { useCreatePortfolio, useUpdateProfile } from '@/components/juniors/juniors.mutations';
+import { getTags } from '@/components/juniors/juniors.queries';
 import Autocomplete from '@/components/ui/Autocomplete';
 import Button from '@/components/ui/Button';
 import Chip from '@/components/ui/Chip';
 import { Input } from '@/components/ui/Input';
+import Loader from '@/components/ui/Loader';
 import Textarea from '@/components/ui/Textarea';
+import { createClient } from '@/supabase/client';
 import { cxTw } from '@/utils/utils';
 
 const PostPortfolio = () => {
-    const tags = [
-        { id: 0, name: 'Python' },
-        { id: 1, name: 'JavaScript' },
-        { id: 2, name: 'Java' },
-        { id: 3, name: 'C++' },
-        { id: 4, name: 'C#' },
-        { id: 5, name: 'Ruby' },
-        { id: 6, name: 'PHP' },
-        { id: 7, name: 'Swift' },
-        { id: 8, name: 'Go' },
-        { id: 9, name: 'Kotlin' },
-        { id: 10, name: 'TypeScript' },
-        { id: 11, name: 'R' },
-        { id: 12, name: 'HTML' },
-        { id: 13, name: 'CSS' },
-        { id: 14, name: 'React.js' },
-        { id: 15, name: 'Angular' },
-        { id: 16, name: 'Vue.js' },
-        { id: 17, name: 'Node.js' },
-        { id: 18, name: 'Express.js' },
-        { id: 19, name: 'Django' },
-        { id: 20, name: 'Flask' },
-        { id: 21, name: 'Bootstrap' },
-        { id: 22, name: 'jQuery' },
-        { id: 23, name: 'RESTful APIs' },
-        { id: 24, name: 'GraphQL' },
-        { id: 25, name: 'Data Analysis' },
-        { id: 26, name: 'Machine Learning' },
-        { id: 27, name: 'Deep Learning' },
-        { id: 28, name: 'Data Visualization' },
-        { id: 29, name: 'Data Mining' },
-        { id: 30, name: 'Big Data' },
-        { id: 31, name: 'Hadoop' },
-        { id: 32, name: 'Spark' },
-        { id: 33, name: 'TensorFlow' },
-        { id: 34, name: 'PyTorch' },
-        { id: 35, name: 'Natural Language Processing (NLP)' },
-        { id: 36, name: 'Predictive Analytics' },
-        { id: 37, name: 'SQL' },
-        { id: 38, name: 'NoSQL' },
-        { id: 40, name: 'AWS (Amazon Web Services)' },
-        { id: 41, name: 'Microsoft Azure' },
-        { id: 42, name: 'Google Cloud Platform (GCP)' },
-        { id: 45, name: 'Kubernetes' },
-        { id: 46, name: 'Docker' },
-        { id: 47, name: 'CI/CD (Continuous Integration/Continuous Deployment)' },
-        { id: 48, name: 'Serverless Computing' },
-        { id: 49, name: 'Terraform' },
-        { id: 50, name: 'Cloud Security' },
-        { id: 51, name: 'Virtualization' },
-        { id: 52, name: 'Network Security' },
-        { id: 53, name: 'Information Security' },
-        { id: 54, name: 'Ethical Hacking' },
-        { id: 55, name: 'Penetration Testing' },
-        { id: 58, name: 'Encryption' },
-        { id: 64, name: 'SOC (Security Operations Center)' },
-        { id: 65, name: 'MySQL' },
-        { id: 66, name: 'PostgreSQL' },
-        { id: 67, name: 'MongoDB' },
-        { id: 68, name: 'Oracle Database' },
-        { id: 69, name: 'Microsoft SQL Server' },
-        { id: 70, name: 'Database Administration' },
-        { id: 71, name: 'Data Modeling' },
-        { id: 72, name: 'Database Design' },
-        { id: 73, name: 'Redis' },
-        { id: 74, name: 'Elasticsearch' },
-        { id: 75, name: 'Cassandra' },
-        { id: 76, name: 'TCP/IP' },
-        { id: 77, name: 'DNS' },
-        { id: 78, name: 'DHCP' },
-        { id: 99, name: 'Version Control (Git)' },
-        { id: 100, name: 'Continuous Integration' },
-        { id: 101, name: 'Test-Driven Development (TDD)' },
-        { id: 102, name: 'Microservices' },
-        { id: 103, name: 'API Development' },
-        { id: 104, name: 'Mobile Development (iOS, Android)' },
-        { id: 105, name: 'Frontend Development' },
-        { id: 106, name: 'Backend Development' },
-        { id: 107, name: 'Full Stack Development' },
-        { id: 108, name: 'Artificial Intelligence (AI)' },
-        { id: 109, name: 'Deep Learning' },
-        { id: 110, name: 'Computer Vision' },
-        { id: 111, name: 'Robotics' },
-        { id: 112, name: 'Automation' },
-        { id: 113, name: 'AI Ethics' },
-        { id: 114, name: 'Project Management' },
-        { id: 115, name: 'PMP (Project Management Professional)' },
-        { id: 116, name: 'Risk Management' },
-        { id: 117, name: 'Stakeholder Management' },
-        { id: 118, name: 'Budgeting' },
-        { id: 119, name: 'Resource Management' },
-        { id: 120, name: 'Business Intelligence (BI)' },
-        { id: 121, name: 'ETL (Extract, Transform, Load)' },
-        { id: 122, name: 'Reporting' },
-        { id: 123, name: 'Power BI' },
-        { id: 124, name: 'Tableau' },
-        { id: 125, name: 'Business Analytics' },
-        { id: 126, name: 'KPI (Key Performance Indicators)' },
-        { id: 127, name: 'Data Governance' },
-        { id: 128, name: 'Jenkins' },
-        { id: 129, name: 'Ansible' },
-        { id: 130, name: 'Puppet' },
-        { id: 131, name: 'Chef' },
-        { id: 132, name: 'GitLab CI' },
-        { id: 133, name: 'Infrastructure as Code (IaC)' },
-        { id: 134, name: 'Monitoring & Logging' },
-        { id: 135, name: 'Blockchain' },
-        { id: 136, name: 'Smart Contracts' },
-        { id: 137, name: 'Ethereum' },
-        { id: 138, name: 'Bitcoin' },
-        { id: 139, name: 'Cryptocurrency' },
-        { id: 140, name: 'Decentralized Applications (dApps)' },
-        { id: 141, name: 'Hyperledger' },
-        { id: 142, name: 'Solidity' },
-        { id: 143, name: 'Web3' },
-        { id: 144, name: 'Quantum Computing' },
-        { id: 145, name: 'Edge Computing' },
-        { id: 146, name: '5G Networks' },
-        { id: 147, name: 'Internet of Things (IoT)' },
-        { id: 148, name: 'Augmented Reality (AR)' },
-        { id: 149, name: 'Virtual Reality (VR)' },
-        { id: 150, name: 'Mixed Reality (MR)' },
-        { id: 151, name: 'Autonomous Systems' },
-        { id: 152, name: 'Communication' },
-        { id: 153, name: 'Team Collaboration' },
-        { id: 154, name: 'Problem Solving' },
-        { id: 155, name: 'Critical Thinking' },
-        { id: 156, name: 'Time Management' },
-        { id: 157, name: 'Adaptability' },
-        { id: 158, name: 'Leadership' },
-        { id: 159, name: 'Conflict Resolution' },
-        { id: 160, name: 'Customer Service' },
-        { id: 161, name: 'Documentation' },
-    ];
+    const supabase = createClient();
+
+    const tags = useQuery(getTags(supabase));
 
     const createPortfolio = useCreatePortfolio();
     const updateProfile = useUpdateProfile();
@@ -162,15 +35,15 @@ const PostPortfolio = () => {
     const MAX_ABOUT_YOU_LENGTH = 160;
     const MAX_ACCEPTED_TAGS = 10;
 
-    const [acceptedTags, setAcceptedTags] = useState<never[] | { id: number; name: string }[]>([]);
+    const [acceptedTags, setAcceptedTags] = useState<never[] | string[]>([]);
 
-    const handleAcceptTag = (tag: { id: number; name: string }) => {
+    const handleAcceptTag = (tag: string) => {
         if (acceptedTags.length === MAX_ACCEPTED_TAGS) return;
         setAcceptedTags((prevAcceptedTags) => [...prevAcceptedTags, tag]);
     };
 
-    const handleDeleteTag = (id: number) => {
-        setAcceptedTags((prevAcceptedTags) => prevAcceptedTags.filter((tag) => tag.id !== id));
+    const handleDeleteTag = (tagToDelete: string) => {
+        setAcceptedTags((prevAcceptedTags) => prevAcceptedTags.filter((tag) => tag !== tagToDelete));
     };
 
     const portfolioSchema = z.object({
@@ -192,6 +65,8 @@ const PostPortfolio = () => {
 
     const { append, fields, remove } = useFieldArray({ control, name: PORTFOLIO.PROJECTS });
 
+    if (tags.isFetching || tags.data === undefined) return <Loader />;
+
     const handleSubmitPortfolio = async (data: z.infer<typeof portfolioSchema>) => {
         const projectUrlsToAdd = data.projects.reduce(
             (result, item, index) => {
@@ -204,7 +79,7 @@ const PostPortfolio = () => {
 
         const tagsToAdd = acceptedTags.reduce(
             (result, item, index) => {
-                result = { ...result, [`tag_${index}`]: item.name };
+                result = { ...result, [`tag_${index}`]: item };
 
                 return result;
             },
@@ -222,7 +97,7 @@ const PostPortfolio = () => {
         updateProfile.mutate({ portfolio_id: portfolioId });
     };
 
-    const isNoTagsAdded = acceptedTags.every((tag) => tag.name.trim().length === 0);
+    const isNoTagsAdded = acceptedTags.every((tag) => tag.trim().length === 0);
 
     return (
         <>
@@ -293,18 +168,18 @@ const PostPortfolio = () => {
                 <div className="flex flex-col gap-2">
                     <Autocomplete
                         label={{ value: 'Technologies', className: 'text-white' }}
-                        data={tags}
+                        data={tags.data}
                         acceptedData={acceptedTags}
                         onAcceptItem={handleAcceptTag}
                     />
                     <div className="flex flex-wrap gap-2">
                         {acceptedTags.map((tag) => (
                             <Chip
-                                key={tag.id}
+                                key={tag}
                                 size="sm"
                                 variant="light"
-                                value={tag.name}
-                                onDelete={() => handleDeleteTag(tag.id)}
+                                value={tag}
+                                onDelete={() => handleDeleteTag(tag)}
                             />
                         ))}
                     </div>
