@@ -116,21 +116,18 @@ export type Database = {
       profiles: {
         Row: {
           created_at: string
-          email: string | null
           id: number
           portfolio_id: number | null
           user_id: string
         }
         Insert: {
           created_at?: string
-          email?: string | null
           id?: number
           portfolio_id?: number | null
           user_id?: string
         }
         Update: {
           created_at?: string
-          email?: string | null
           id?: number
           portfolio_id?: number | null
           user_id?: string
@@ -144,6 +141,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
         ]
+      }
+      tags: {
+        Row: {
+          created_at: string
+          id: number
+          name: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          name: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          name?: string
+        }
+        Relationships: []
       }
     }
     Views: {

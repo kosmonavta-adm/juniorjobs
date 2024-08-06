@@ -6,22 +6,15 @@ import { Input } from '@/components/ui/Input';
 import { useClickOutside } from '@/utils/hooks/useClickOutside';
 import { cxTw } from '@/utils/utils';
 
-type Data = (Item & Record<string, unknown>)[];
-
-type Item = {
-    name: string;
-    id: number;
-};
-
 interface InputProps extends ComponentPropsWithoutRef<'input'> {
     label?: {
         value: string;
         className?: string;
     };
     error?: string;
-    data: Data;
-    acceptedData: Data;
-    onAcceptItem: (item: Item & Record<string, unknown>) => void;
+    data: string[];
+    acceptedData: string[];
+    onAcceptItem: (item: string) => void;
 }
 
 const Autocomplete = ({ className, error, data, acceptedData, onAcceptItem, ...props }: InputProps) => {
@@ -50,15 +43,15 @@ const Autocomplete = ({ className, error, data, acceptedData, onAcceptItem, ...p
             e.preventDefault();
             if (isExactMatch) {
                 const acceptedItem = data[exactMatchIndex];
-                if ('id' in acceptedItem && 'name' in acceptedItem) {
-                    onAcceptItem(acceptedItem);
-                }
+
+                onAcceptItem(acceptedItem);
+
                 return;
             }
         }
     };
 
-    const handleAcceptItem = <T extends Item>(tag: T) => {
+    const handleAcceptItem = (tag: string) => {
         handleCloseSugesstions();
         onAcceptItem(tag);
         setInputValue('');
@@ -71,13 +64,12 @@ const Autocomplete = ({ className, error, data, acceptedData, onAcceptItem, ...p
 
     const filteredSuggestions = data.filter(
         (item) =>
-            item.name.toLowerCase().includes(inputValue.trim().toLowerCase()) &&
-            acceptedData.some((acceptedItem) => acceptedItem.name.trim().toLowerCase() === item.name.toLowerCase()) ===
-                false
+            item.toLowerCase().includes(inputValue.trim().toLowerCase()) &&
+            acceptedData.some((acceptedItem) => acceptedItem.trim().toLowerCase() === item.toLowerCase()) === false
     );
 
     const exactMatchIndex = filteredSuggestions.findIndex(
-        (item) => item.name.trim().toLowerCase() === inputValue.trim().toLowerCase()
+        (item) => item.trim().toLowerCase() === inputValue.trim().toLowerCase()
     );
 
     const isExactMatch = exactMatchIndex !== -1;
@@ -87,14 +79,14 @@ const Autocomplete = ({ className, error, data, acceptedData, onAcceptItem, ...p
     const areSuggestionsNotEmpty = filteredSuggestions.length > 0;
 
     const isSuggestionAlreadyAccepted = acceptedData.some(
-        (item) => item.name.trim().toLowerCase() === inputValue.toLowerCase()
+        (item) => item.trim().toLowerCase() === inputValue.toLowerCase()
     );
     const isSuggestionNotAcceptedYet = isSuggestionAlreadyAccepted === false;
 
     return (
         <div
             ref={menuRef}
-            className={cxTw('relative grid')}
+            className={cxTw('relative grid w-full')}
         >
             <Input
                 id={ID}
@@ -116,7 +108,7 @@ const Autocomplete = ({ className, error, data, acceptedData, onAcceptItem, ...p
                         >
                             {filteredSuggestions.map((item, index) => (
                                 <button
-                                    key={item.id}
+                                    key={item}
                                     className={clsx(
                                         'select-none items-center rounded-sm px-3 py-1.5 text-left text-sm hover:bg-neutral-100',
                                         exactMatchIndex === index && 'font-semibold'
@@ -124,7 +116,7 @@ const Autocomplete = ({ className, error, data, acceptedData, onAcceptItem, ...p
                                     type="button"
                                     onClick={() => handleAcceptItem(item)}
                                 >
-                                    {item.name}
+                                    {item}
                                 </button>
                             ))}
                         </div>
