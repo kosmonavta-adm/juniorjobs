@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useFieldArray, useForm } from 'react-hook-form';
 import { z } from 'zod';
 
-import { useCreatePortfolio } from '@/components/juniors/juniors.mutations';
+import { useCreatePortfolio, useUpdateProfile } from '@/components/juniors/juniors.mutations';
 import Autocomplete from '@/components/ui/Autocomplete';
 import Button from '@/components/ui/Button';
 import Chip from '@/components/ui/Chip';
@@ -149,6 +149,7 @@ const PostPortfolio = () => {
     ];
 
     const createPortfolio = useCreatePortfolio();
+    const updateProfile = useUpdateProfile();
 
     const PORTFOLIO = {
         FULL_NAME: 'fullName',
@@ -174,7 +175,6 @@ const PostPortfolio = () => {
 
     const portfolioSchema = z.object({
         [PORTFOLIO.FULL_NAME]: z.string().min(1),
-        [PORTFOLIO.EMAIL]: z.string().email(),
         [PORTFOLIO.ABOUT]: z.string().min(1).max(MAX_ABOUT_YOU_LENGTH),
         [PORTFOLIO.PROJECTS]: z.array(z.object({ [PORTFOLIO.PROJECT_URL]: z.string().url() })),
     });
@@ -184,7 +184,6 @@ const PostPortfolio = () => {
         defaultValues: {
             [PORTFOLIO.FULL_NAME]: '',
             [PORTFOLIO.ABOUT]: '',
-            [PORTFOLIO.EMAIL]: '',
             [PORTFOLIO.PROJECTS]: [{ [PORTFOLIO.PROJECT_URL]: '' }],
         },
     });
@@ -218,13 +217,15 @@ const PostPortfolio = () => {
             ...projectUrlsToAdd,
             ...tagsToAdd,
         };
-        createPortfolio.mutate(parsedData);
+
+        const { id: portfolioId } = await createPortfolio.mutateAsync(parsedData);
+        updateProfile.mutate({ portfolio_id: portfolioId });
     };
 
     const isNoTagsAdded = acceptedTags.every((tag) => tag.name.trim().length === 0);
 
     return (
-        <div className="flex max-w-3xl flex-col gap-16 self-start bg-purple-500 p-16">
+        <>
             <p className="text-center text-4xl font-bold text-white">Looking for a job? Post your portfolio!</p>
             <form
                 onSubmit={handleSubmit(handleSubmitPortfolio)}
@@ -234,11 +235,6 @@ const PostPortfolio = () => {
                     className="bg-neutral-50"
                     label={{ value: 'Full Name', className: 'text-white' }}
                     {...register(PORTFOLIO.FULL_NAME)}
-                />
-                <Input
-                    className="bg-neutral-50"
-                    label={{ value: 'Contact e-mail', className: 'text-white' }}
-                    {...register(PORTFOLIO.EMAIL)}
                 />
                 <div>
                     {fields.map((field, index) => (
@@ -314,8 +310,8 @@ const PostPortfolio = () => {
                     </div>
                     <p className="ml-auto text-white">
                         {`
-                        ${acceptedTags.length} / ${MAX_ACCEPTED_TAGS}
-                        `}
+                            ${acceptedTags.length} / ${MAX_ACCEPTED_TAGS}
+                            `}
                     </p>
                 </div>
                 <Button
@@ -327,7 +323,7 @@ const PostPortfolio = () => {
                     Submit your portfolio
                 </Button>
             </form>
-        </div>
+        </>
     );
 };
 

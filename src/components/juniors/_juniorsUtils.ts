@@ -5,3 +5,7 @@ export const juniorsKeys = {
 export const peeksKeys = {
     all: ['peeks_all'],
 };
+
+export const portfoliosKeys = {
+    single: ['portfolio_single'],
+};

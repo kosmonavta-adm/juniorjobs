@@ -1,8 +1,8 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 
-import { juniorsKeys, peeksKeys } from '@/components/juniors/_juniorsUtils';
+import { juniorsKeys, peeksKeys, portfoliosKeys } from '@/components/juniors/_juniorsUtils';
 import { createClient } from '@/supabase/client';
-import { TablesInsert } from '@/utils/dbTypes';
+import { TablesInsert, TablesUpdate } from '@/utils/dbTypes';
 
 export const useCreatePeek = () => {
     const queryClient = useQueryClient();
@@ -28,7 +28,12 @@ export const useCreatePortfolio = () => {
     const supabase = createClient();
 
     const mutationFn = async (portfolioData: TablesInsert<'juniors'>) => {
-        const { data, error } = await supabase.from('juniors').insert(portfolioData);
+        const session = await supabase.auth.getUser();
+        const { data, error } = await supabase
+            .from('juniors')
+            .insert({ ...portfolioData, email: session.data.user?.email })
+            .select('id')
+            .single();
         if (error) throw new Error(error.message);
         return data;
     };
@@ -37,6 +42,25 @@ export const useCreatePortfolio = () => {
         mutationFn,
         onSettled: () => {
             queryClient.invalidateQueries({ queryKey: juniorsKeys.all });
+            queryClient.invalidateQueries({ queryKey: portfoliosKeys.single });
         },
+    });
+};
+
+export const useUpdateProfile = () => {
+    const supabase = createClient();
+
+    const mutationFn = async (profileData: TablesUpdate<'profiles'>) => {
+        const session = await supabase.auth.getUser();
+        const { data, error } = await supabase
+            .from('profiles')
+            .update(profileData)
+            .eq('user_id', session.data.user?.id);
+        if (error) throw new Error(error.message);
+        return data;
+    };
+
+    return useMutation({
+        mutationFn,
     });
 };
