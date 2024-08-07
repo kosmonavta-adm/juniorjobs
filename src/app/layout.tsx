@@ -1,5 +1,6 @@
 import './globals.css';
 
+import { Analytics } from '@vercel/analytics/react';
 import type { Metadata } from 'next';
 import { Karla } from 'next/font/google';
 
@@ -21,7 +22,10 @@ export default function RootLayout({
             className={mainFont.variable}
             lang="en"
         >
-            <body>{children}</body>
+            <body>
+                {children}
+                <Analytics />
+            </body>
         </html>
     );
 }
