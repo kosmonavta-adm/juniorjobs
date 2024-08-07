@@ -28,8 +28,8 @@ export default async function WelcomePage() {
     return (
         <HydrationBoundary state={dehydrate(queryClient)}>
             <div className="mx-auto flex min-h-svh max-w-screen-4xl flex-col gap-16 px-8 py-16 md:px-16 md:py-32 2xl:px-32">
-                <div className="flex justify-between">
-                    <div className="flex min-h-[750px] w-full max-w-3xl flex-col gap-16 self-start bg-purple-500 p-16">
+                <div className="flex flex-col items-center gap-16 2xl:flex-row 2xl:justify-between">
+                    <div className="order-last mx-auto flex min-h-[750px] max-w-3xl flex-col gap-16 self-start bg-purple-500 p-16 2xl:order-none 2xl:w-full">
                         <PortfolioQuickInfo userId={session.data.user.id} />
                     </div>
                     <TagsCloud />
