@@ -12,9 +12,9 @@ import { url } from '@/utils/utils';
 export default async function WelcomePage() {
     const supabase = createClient();
 
-    const { data } = await supabase.auth.getUser();
+    const session = await supabase.auth.getUser();
 
-    if (data?.user === null) {
+    if (session.data?.user === null) {
         redirect(url.login);
     }
 
@@ -31,7 +31,7 @@ export default async function WelcomePage() {
                     <Filters />
                 </Suspense>
                 <Suspense fallback={<Loader />}>
-                    <JuniorsList />
+                    <JuniorsList userId={session.data.user.id} />
                 </Suspense>
             </div>
         </HydrationBoundary>

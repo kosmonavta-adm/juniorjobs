@@ -3,7 +3,7 @@
 import { useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'next/navigation';
 
-import { getJuniors, getPeeks } from '@/components/juniors/juniors.queries';
+import { getJuniors, getUserPeeks } from '@/components/juniors/juniors.queries';
 import PeekAtPortfolio from '@/components/juniors/PeekAtJunior';
 import Chip from '@/components/ui/Chip';
 import CustomLink from '@/components/ui/CustomLink';
@@ -12,12 +12,13 @@ import { createClient } from '@/supabase/client';
 
 type JuniorsListProps = {
     limit?: number;
+    userId: string;
 };
 
-const JuniorsList = ({ limit = Infinity }: JuniorsListProps) => {
+const JuniorsList = ({ limit = Infinity, userId }: JuniorsListProps) => {
     const supabase = createClient();
     const juniors = useQuery(getJuniors(supabase));
-    const peeks = useQuery(getPeeks(supabase));
+    const peeks = useQuery(getUserPeeks(supabase, userId));
     const searchParams = useSearchParams();
 
     if (juniors.isFetching) return <Loader />;

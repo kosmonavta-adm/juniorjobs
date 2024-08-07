@@ -20,7 +20,7 @@ const PortfolioQuickInfo = ({ userId }: PortfolioQuickInfoProps) => {
 
     if (portfolio.data === null) return <PostPortfolio />;
 
-    if (portfolio.data?.isVerified) return <PortfolioQuickStats />;
+    if (portfolio.data?.isVerified) return <PortfolioQuickStats juniorId={portfolio.data.id} />;
     else return <PortfolioInVerification />;
 };
 

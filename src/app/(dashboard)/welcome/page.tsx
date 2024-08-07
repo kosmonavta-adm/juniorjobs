@@ -1,7 +1,7 @@
 import { dehydrate, HydrationBoundary, QueryClient } from '@tanstack/react-query';
 import { redirect } from 'next/navigation';
 
-import { getJuniors, getPeeks, getPortfolio } from '@/components/juniors/juniors.queries';
+import { getJuniors, getPortfolio, getUserPeeks } from '@/components/juniors/juniors.queries';
 import JuniorsList from '@/components/juniors/JuniorsList';
 import PortfolioQuickInfo from '@/components/juniors/PortfolioQuickInfo';
 import TagsCloud from '@/components/juniors/TagsCloud';
@@ -21,7 +21,7 @@ export default async function WelcomePage() {
 
     await Promise.all([
         queryClient.prefetchQuery(getJuniors(supabase)),
-        queryClient.prefetchQuery(getPeeks(supabase)),
+        queryClient.prefetchQuery(getUserPeeks(supabase, session.data.user.id)),
         queryClient.prefetchQuery(getPortfolio(supabase, session.data.user.id)),
     ]);
 
@@ -36,7 +36,7 @@ export default async function WelcomePage() {
                 </div>
                 <div className="flex flex-col gap-8">
                     <p className="text-4xl font-bold text-purple-500">Newest Juniors</p>
-                    <JuniorsList />
+                    <JuniorsList userId={session.data.user.id} />
                 </div>
             </div>
         </HydrationBoundary>

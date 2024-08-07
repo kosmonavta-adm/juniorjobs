@@ -40,14 +40,40 @@ export const getJuniors = (client: SupabaseClient<Database>) => ({
     queryKey: juniorsKeys.all,
 });
 
-export const getPeeks = (client: SupabaseClient<Database>) => ({
+export const getPortfolioPeeks = (client: SupabaseClient<Database>, juniorId: number) => ({
     queryFn: async () => {
-        const { data, error } = await client.from('peeks').select(`
+        const { data, error } = await client
+            .from('peeks')
+            .select(
+                `
+            id,
+            createdAt:created_at
+
+    `
+            )
+            .eq('junior_id', juniorId)
+            .order('created_at', { ascending: true });
+
+        if (error) throw new Error(error.message);
+
+        return data;
+    },
+    queryKey: peeksKeys.portfolio(),
+});
+
+export const getUserPeeks = (client: SupabaseClient<Database>, userId: string) => ({
+    queryFn: async () => {
+        const { data, error } = await client
+            .from('peeks')
+            .select(
+                `
         junior:juniors (
             id,
             email
         )
-    `);
+    `
+            )
+            .eq('user_id', userId);
 
         if (error) throw new Error(error.message);
 
