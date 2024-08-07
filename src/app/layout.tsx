@@ -4,6 +4,8 @@ import { Analytics } from '@vercel/analytics/react';
 import type { Metadata } from 'next';
 import { Karla } from 'next/font/google';
 
+import { Toaster } from '@/components/ui/Toast/Toaster';
+
 const mainFont = Karla({ subsets: ['latin', 'latin-ext'], variable: '--main-font' });
 
 export const metadata: Metadata = {
@@ -25,6 +27,7 @@ export default function RootLayout({
             <body>
                 {children}
                 <Analytics />
+                <Toaster />
             </body>
         </html>
     );
