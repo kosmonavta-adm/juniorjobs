@@ -49,7 +49,21 @@ const PostPortfolio = () => {
     const portfolioSchema = z.object({
         [PORTFOLIO.FULL_NAME]: z.string().min(1),
         [PORTFOLIO.ABOUT]: z.string().min(1).max(MAX_ABOUT_YOU_LENGTH),
-        [PORTFOLIO.PROJECTS]: z.array(z.object({ [PORTFOLIO.PROJECT_URL]: z.string().url() })),
+        [PORTFOLIO.PROJECTS]: z.array(
+            z.object({
+                [PORTFOLIO.PROJECT_URL]: z
+                    .string()
+                    .refine((value) => {
+                        const siteAddressRegex = /^(?:www\.)?[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)+$/;
+
+                        return siteAddressRegex.test(value);
+                    })
+                    .transform((url) => {
+                        if (url.includes('https')) return url;
+                        return `https://${url}`;
+                    }),
+            })
+        ),
     });
 
     const { register, handleSubmit, formState, control, watch } = useForm({
